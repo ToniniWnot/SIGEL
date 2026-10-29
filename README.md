@@ -5,7 +5,7 @@ Sistema de Gestión de Préstamo de Equipos de Laboratorio. Proyecto 1 de ISW-61
 ## Requisitos
 
 - XAMPP con PHP 8.2 y MariaDB
-- Apache con virtual hosts
+- Apache con soporte para virtual hosts
 
 ## Instalación
 
