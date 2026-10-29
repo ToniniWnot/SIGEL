@@ -1,0 +1,10 @@
+# Configuración local con credenciales
+config/config.php
+
+# macOS
+.DS_Store
+
+# Editores y logs
+.vscode/
+.idea/
+*.log
