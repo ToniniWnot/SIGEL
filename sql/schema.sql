@@ -96,3 +96,34 @@ CREATE TABLE IF NOT EXISTS prestamo_detalle (
     FOREIGN KEY (prestamo_id) REFERENCES prestamos (id),
     FOREIGN KEY (equipo_id) REFERENCES equipos (id)
 );
+
+-- Tokens de recuerdame (esquema selector:validador)
+-- Se guarda el hash del validador, nunca el validaor en texto plano.
+-- La cookie lleva selector:validador
+CREATE TABLE IF NOT EXISTS auth_tokens (
+    id INT NOT NULL AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    selector VARCHAR(32) NOT NULL,
+    validador_hash CHAR(64) NOT NULL,
+    expira_en DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE (selector),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
+);
+
+-- Bitacoca de eventos (crear, editar, eliminar). Solo se inserta,
+-- nunca se modifica ni se borra. 
+-- Sin fk a proposito: es un registro historico, no debe depender
+-- de las otras tablas. Los valores se guardan como texto JSON.
+CREATE TABLE IF NOT EXISTS bitacora (
+    id INT NOT NULL AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    accion VARCHAR(20) NOT NULL,
+    entidad VARCHAR(30) NOT NULL,
+    entidad_id INT NOT NULL,
+    valores_antes TEXT NULL,
+    valores_despues TEXT NULL,
+    ip VARCHAR(45) NULL,
+    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
