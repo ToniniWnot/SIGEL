@@ -67,3 +67,32 @@ CREATE TABLE IF NOT EXISTS equipo_imagenes (
     PRIMARY KEY (id),
     FOREIGN KEY (equipo_id) REFERENCES equipos (id)
 );
+
+-- Prestamos de equipos. usuario_id es el profesor que recibe el equipo (no inicia sesion)
+-- operador_id es el usuario que registra el prestamo.
+-- estado: solicitado, aprobado
+-- entregado, devuelto, cancelado
+CREATE TABLE IF NOT EXISTS prestamos (
+    id INT NOT NULL AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    operador_id INT NOT NULL,
+    estado VARCHAR(20) NOT NULL DEFAULT 'solicitado',
+    fecha_inicio DATETIME NOT NULL,
+    fecha_fin DATETIME NOT NULL,
+    creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
+    FOREIGN KEY (operador_id) REFERENCES usuarios (id)
+);
+
+-- Equipos incluidos en cada prestamo ya que
+-- un prestamo puede incluir varios equipos.
+-- fecha_devolucion queda NULL hasta que el equipo sea devuelto.
+CREATE TABLE IF NOT EXISTS prestamo_detalle (
+    prestamo_id INT NOT NULL,
+    equipo_id INT NOT NULL,
+    fecha_devolucion DATETIME NULL,
+    PRIMARY KEY (prestamo_id, equipo_id),
+    FOREIGN KEY (prestamo_id) REFERENCES prestamos (id),
+    FOREIGN KEY (equipo_id) REFERENCES equipos (id)
+);
