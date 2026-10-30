@@ -33,3 +33,37 @@ CREATE TABLE IF NOT EXISTS usuarios (
     UNIQUE (correo),
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
+
+-- Categorias de equipos. Tiene dias maximos de prestamo
+-- limita la duracion de un prestamo.
+CREATE TABLE IF NOT EXISTS categorias (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(80) NOT NULL,
+    dias_max_prestamo INT NOT NULL DEFAULT 7,
+    eliminado_en DATETIME NULL,
+    PRIMARY KEY (id),
+    UNIQUE (nombre)
+);
+
+-- Equipos del laboratorio. Estado: dispoible o mantenimiento.
+CREATE TABLE IF NOT EXISTS equipos (
+    id INT NOT NULL AUTO_INCREMENT,
+    categoria_id INT NOT NULL,
+    codigo VARCHAR(30) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    estado VARCHAR(20) NOT NULL DEFAULT 'disponible',
+    eliminado_en DATETIME NULL,
+    PRIMARY KEY (id),
+    UNIQUE (codigo),
+    FOREIGN KEY (categoria_id) REFERENCES categorias (id)
+);
+
+-- Imagenes de un equipo (puede tener varias imagenes)
+-- ruta guarda el nombre del archivo
+CREATE TABLE IF NOT EXISTS equipo_imagenes (
+    id INT NOT NULL AUTO_INCREMENT,
+    equipo_id INT NOT NULL,
+    ruta VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (equipo_id) REFERENCES equipos (id)
+);
