@@ -15,3 +15,46 @@ function startSession() {
         session_start();
     }
 }
+
+// Segundos que hay de inactividad durante los cuales la sesion deja de ser válida
+const SESSION_TIMEOUT = 1800; // 30 minutos
+
+// Cierra la sesión por completo
+// Vacía los datos, borra la cookie y destruye en el servidor
+function destroySession() {
+    // Borra los datos de la sesión
+    startSession();
+    $_SESSION = [];
+    // Borra la cookie de sesión del navegador, la envia ya vencida para que el navegador la borre
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', [
+        'expires' => time() - 3600, 
+        'path' => $params['path'],
+        'domain' => $params['domain'],
+        'secure' => $params['secure'],
+        'httponly' => $params['httponly'],
+        'samesite' => $params['samesite'],
+    ]);
+    session_destroy();
+}
+
+// Seguridad de acceso, lo llamamos al inicio de cada página protegida
+function requireLogin() {
+    startSession();
+    
+    // Si no hay usuario logueado, redirige a login (index.php) con un mensaje de error
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /index.php?error=login_required');
+        exit;
+    }
+
+    // Si pasa mucho tiempo sin actividad se cierra la sesión
+    if (time() - ($_SESSION['last_activity'] ?? time()) > SESSION_TIMEOUT) {
+        destroySession();
+        header('Location: /index.php?error=session_expired');
+        exit;
+    }
+
+    // Cada vista renueva el tiempo de actividad
+    $_SESSION['last_activity'] = time();
+}
