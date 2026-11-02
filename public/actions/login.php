@@ -40,7 +40,8 @@ try {
     // La consulta preparada, el correo viaja separado del SQL
     // así evitamos inyecciones SQL
     $stmt = $pdo->prepare(
-        'SELECT u.id, u.nombre, u.password_hash, u.activo, r.nombre AS rol
+        'SELECT u.id, u.nombre, u.password_hash, u.activo, r.nombre AS rol, u.intentos_fallidos, 
+        (u.bloqueado_hasta IS NOT NULL AND u.bloqueado_hasta > NOW()) AS bloqueado
         FROM usuarios u
         INNER JOIN roles r ON r.id = u.rol_id
         WHERE u.correo = :correo AND u.eliminado_en IS NULL
@@ -71,10 +72,41 @@ if (
     exit;
 }
 
+// Si la cuenta está bloqueada por intentos, se rechaza 
+// sin comprobar la contraseña
+if ((int) $usuario['bloqueado'] === 1) {
+    header('Location: /index.php?error=account_locked');
+    exit;
+}
+
 // Comparamos la contraseña que envió el usuario con la que está en la base
 if (!password_verify($password, $usuario['password_hash'])) {
+    // Suma un intento fallido, al llegar a 3 se bloquea la cuenta por 2 minutos
+    $intentos = (int) $usuario['intentos_fallidos'] + 1;
+
+    try {
+        if ($intentos >= 3) {
+            $stmt = $pdo->prepare(
+                'UPDATE usuarios SET intentos_fallidos = 0, bloqueado_hasta = DATE_ADD(NOW(), INTERVAL 2 MINUTE) WHERE id = :id'
+            );
+            $stmt->execute(['id' => $usuario['id']]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE usuarios SET intentos_fallidos = :intentos WHERE id = :id');
+            $stmt->execute(['intentos' => $intentos, 'id' => $usuario['id']]);
+        }
+    } catch (PDOException $e) {
+        error_log('Error al registrar intento fallido' . $e->getMessage());
+    }
     header('Location: /index.php?error=invalid_credentials');
     exit;
+}
+
+// Credenciales correctas, reinicia el contador de intentos fallidos al iniciar sesión correctamente
+try {
+    $stmt = $pdo->prepare('UPDATE usuarios SET intentos_fallidos = 0, bloqueado_hasta = NULL WHERE id = :id');
+    $stmt->execute(['id' => $usuario['id']]); 
+    } catch (PDOException $e) {
+        error_log('Error al reiniciar los intentos fallidos' . $e->getMessage());
 }
 
 // Al tener la credenciales correctas, se abre la sesión
