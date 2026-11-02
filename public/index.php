@@ -23,6 +23,10 @@ require_once __DIR__ . '/pages/common/header.php';
                         <label for="password">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember" value="1">
+                        <label class="form-check-label" for="remember">Recordarme</label>
+                    </div>
                     <button type="submit" class="btn btn-primary">Iniciar sesión</button>
                 </form>
             </div>
