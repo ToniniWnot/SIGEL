@@ -58,3 +58,16 @@ function requireLogin() {
     // Cada vista renueva el tiempo de actividad
     $_SESSION['last_activity'] = time();
 }
+
+// Solo deja pasar a los roles indicados previamente
+// requireRole(['administrador'])
+function requireRole(array $roles) {
+    // Primero debe de tener una sesion válida
+    requireLogin();
+
+    // Si el rol del usuario no está en la lista, se le niega completamente el acceso
+    if (!in_array($_SESSION['user_role'], $roles, true)) {
+        header('Location: /pages/dashboard.php?error=forbidden');
+        exit;
+    }
+}
