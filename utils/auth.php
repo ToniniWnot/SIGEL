@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/db.php';
+
 // Inicia la sesión una sola vez por petición 
 // con la cookie de sesión protegida
 
@@ -45,12 +47,20 @@ function destroySession() {
 function requireLogin() {
     startSession();
     
-    // Si no hay usuario logueado, redirige a login (index.php) con un mensaje de error
+    // Si no hay usuario logueado, probamos con la cookie de "Recordarme"
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /index.php?error=login_required');
-        exit;
+        $entro = false;
+        try {
+            $entro = loginWithRememberCookie(obtener_conexion());
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+        }
+        // Si tampoco se pudo iniciar sesión con la cookie, redirige al login
+        if (!$entro) {
+            header('Location: /index.php?error=login_required');
+            exit;
+        }
     }
-
     // Si pasa mucho tiempo sin actividad se cierra la sesión
     if (time() - ($_SESSION['last_activity'] ?? time()) > SESSION_TIMEOUT) {
         destroySession();
@@ -102,4 +112,45 @@ function createRememberMeToken(PDO $pdo, int $userId) {
         'httponly' => true, // Javascript no puede leer la cookie y así frenamos el robo por XSS
         'samesite' => 'Lax'
     ]);
+}
+
+// Intenta iniciar sesión con la cookie de "Recordarme"
+// Devuelve true si se pudo iniciar sesión, false si no
+function loginWithRememberCookie(PDO $pdo): bool {
+    // Si no hay cookie, no hay nada que hacer
+    if (!isset($_COOKIE[REMEMBER_ME_COOKIE]) || !is_string($_COOKIE[REMEMBER_ME_COOKIE])) {
+        return false;
+    }
+
+    // La cookie tiene el formato selector:validador
+    $partes = explode(':', $_COOKIE[REMEMBER_ME_COOKIE]);
+    if (count($partes) !== 2) {
+        return false;
+    }
+    [$selector, $validator] = $partes;
+
+    // Buscamos la fila por selector, solo si los tokens no han vencido
+        $stmt = $pdo->prepare('SELECT t.id, t.validador_hash, u.id AS usuario_id, u.nombre, r.nombre AS rol
+                           FROM auth_tokens t
+                           INNER JOIN usuarios u ON u.id = t.usuario_id
+                           INNER JOIN roles r ON r.id = u.rol_id
+                           WHERE t.selector = :selector AND t.expira_en > NOW()
+                           AND u.activo = 1 AND u.eliminado_en IS NULL AND r.nombre <> \'profesor\'
+                           LIMIT 1');
+    $stmt->execute([':selector' => $selector]);
+    $token = $stmt->fetch();
+
+    // Si no existe el token o el validador no coincide, falla
+    if ($token === false || !hash_equals($token['validador_hash'], hash('sha256', $validator))) {
+        return false;
+    }
+
+    // Y si todo coincide, inicia la sesión del usuario
+    startSession();
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = (int) $token['usuario_id'];
+    $_SESSION['user_name'] = $token['nombre'];
+    $_SESSION['user_role'] = $token['rol'];
+    $_SESSION['last_activity'] = time();
+    return true;
 }
