@@ -154,3 +154,21 @@ function loginWithRememberCookie(PDO $pdo): bool {
     $_SESSION['last_activity'] = time();
     return true;
 }
+
+// Borra el token de "Recordarme" de la BD y la cookie del navegador
+function clearRememberToken(PDO $pdo) {
+    // Si hay cookie, borramos la fila de la BD usando el selector
+    if (isset($_COOKIE[REMEMBER_ME_COOKIE]) && is_string($_COOKIE[REMEMBER_ME_COOKIE])) {
+        $partes = explode(':', $_COOKIE[REMEMBER_ME_COOKIE]);
+        $stmt = $pdo->prepare('DELETE FROM auth_tokens WHERE selector = :selector');
+        $stmt->execute([':selector' => $partes[0]]);
+    }
+
+    // Mandamos la cookie al navegador ya vencida para que la borre
+    setcookie(REMEMBER_ME_COOKIE, '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+}
