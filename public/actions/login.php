@@ -114,6 +114,15 @@ try {
 startSession();
 session_regenerate_id(true);
 
+// Si el usuario marcó "Recordarme" entonces creamos el token de larga duración
+if (isset($_POST['remember'])) {
+    try {
+        createRememberMeToken($pdo, (int) $usuario['id']);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+    }
+}
+
 $_SESSION['user_id'] = (int) $usuario['id'];
 $_SESSION['user_name'] = $usuario['nombre'];
 $_SESSION['user_role'] = $usuario['rol'];

@@ -18,6 +18,9 @@ function startSession() {
 
 // Segundos que hay de inactividad durante los cuales la sesion deja de ser válida
 const SESSION_TIMEOUT = 1800; // 30 minutos
+// Nombre de la cookie de "Recordarme" y duanto dura
+const REMEMBER_ME_COOKIE = 'remember_me';
+const REMEMBER_DAYS = 30; // 30 días 
 
 // Cierra la sesión por completo
 // Vacía los datos, borra la cookie y destruye en el servidor
@@ -70,4 +73,33 @@ function requireRole(array $roles) {
         header('Location: /pages/dashboard.php?error=forbidden');
         exit;
     }
+}
+
+// Crea el token de "Recordarme" para un usuario
+// Se guarda el hash en la BD y envia la cookie al navegador
+function createRememberMeToken(PDO $pdo, int $userId) {
+    // Selector, identifica la fila en la BD de 32 caracteres
+    $selector = bin2hex(random_bytes(16));
+    // Validador, es el secreto, solo viaja en la cookie, 64 caracteres
+    $validator = bin2hex(random_bytes(32));
+    // En la BD solo se guarda el hash del validador, nunca el validador 
+    $validatorHash = hash('sha256', $validator);
+
+    // Guardamos selector, hash del validador y la fecha en la cual vence
+    $stmt = $pdo->prepare('INSERT INTO auth_tokens (usuario_id, selector, validador_hash, expira_en) 
+                           VALUES (:usuario_id, :selector, :validador_hash, DATE_ADD(NOW(), INTERVAL :dias DAY))');
+    $stmt->execute([
+        ':usuario_id' => $userId,
+        ':selector' => $selector,
+        ':validador_hash' => $validatorHash,
+        ':dias' => REMEMBER_DAYS
+    ]);
+
+    // Envia la cookie con selector y validador al navegador
+    setcookie(REMEMBER_ME_COOKIE, $selector . ':' . $validator, [
+        'expires' => time() + (REMEMBER_DAYS * 86400), // 30 días
+        'path' => '/',
+        'httponly' => true, // Javascript no puede leer la cookie y así frenamos el robo por XSS
+        'samesite' => 'Lax'
+    ]);
 }
