@@ -21,7 +21,7 @@ function startSession() {
 // Segundos que hay de inactividad durante los cuales la sesion deja de ser válida
 const SESSION_TIMEOUT = 1800; // 30 minutos
 // Nombre de la cookie de "Recordarme" y duanto dura
-const REMEMBER_ME_COOKIE = 'remember_me';
+const REMEMBER_ME_COOKIE = 'sigel_remember';
 const REMEMBER_DAYS = 30; // 30 días 
 
 // Cierra la sesión por completo
@@ -144,6 +144,12 @@ function loginWithRememberCookie(PDO $pdo): bool {
     if ($token === false || !hash_equals($token['validador_hash'], hash('sha256', $validator))) {
         return false;
     }
+
+    // Rotamos el token, borramos el que se usó y se crea un nuevo con su propia cookie
+    // Entonces asi, si alguien copia la cookie vieja ya no le sirve
+    $stmt = $pdo->prepare('DELETE FROM auth_tokens WHERE id = :id');
+    $stmt->execute([':id' => $token['id']]);
+    createRememberMeToken($pdo, (int) $token['usuario_id']);
 
     // Y si todo coincide, inicia la sesión del usuario
     startSession();
