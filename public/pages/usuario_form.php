@@ -41,7 +41,7 @@ $valores = $usuario ?? ['nombre' => '', 'correo' => '', 'rol_id' => 0, 'activo' 
 // Solo se usa vez y solo si es del mismo formulario (mismo id)
 $guardado = $_SESSION['usuario_form'] ?? null;
 unset($_SESSION['usuario_form']);
-if (is_array($guardado) && (guardado['id'] ?? null) === $id) {
+if (is_array($guardado) && ($guardado['id'] ?? null) === $id) {
     $valores = $guardado;
 }
 
