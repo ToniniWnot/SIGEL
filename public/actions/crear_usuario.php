@@ -41,6 +41,7 @@ try {
     // 23000 es codigo de error, violacion de UNIQUE, otro administrador ya creó ese correo justo antes
     if ($e->getCode() === '23000') {
         header('Location: /pages/usuario_form.php?error=email_exists');
+        exit;
     }
     error_log($e->getMessage());
     header('Location: /pages/usuario_form.php?error=server_error');
