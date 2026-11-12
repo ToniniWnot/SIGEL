@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/bitacora.php';
 
 // Prepara el texto de busqueda para usurlo en un LIKE
 // Escapa % y _ para que se busquen como letras normales y no como comodines
@@ -124,4 +125,151 @@ function validarUsuario(PDO $pdo, array $datos, ?int $idActual = null): ?string 
     }
 
     return null;
+}
+
+// Devuelve el nombre de un rol a partir de su id, o null si no existe
+function nombreRol(PDO $pdo , int $rolId): ?string {
+    $stmt = $pdo->prepare('SELECT nombre FROM roles WHERE id = :id');
+    $stmt->execute([':id' => $rolId]);
+    $nombre = $stmt->fetchColumn();
+    return $nombre === false ? null : $nombre;
+}
+
+// Crear un usuario y nos devuelve su id
+// $actorId es el administrador que lo está creando, para registrar la acción en la bitácora
+// Los datos ya deben venir validados con el metodo validarUsuario()
+function crearUsuario(PDO $pdo, array $datos, int $actorId): int {
+    // Los profesores no inician sesion, asi que no llevan contrasena
+    // Para los demas roles, se guarda el hash, nunca la contrasena en texto plano
+    $hash = nombreRol($pdo, $datos['rol_id']) === 'profesor' ? null
+    : password_hash($datos['password'], PASSWORD_DEFAULT);
+
+    // La transaccion, se guarda el usuario y la bitacora juntos o simplemente no se guarda nada
+    $pdo->beginTransaction();
+    try { 
+        $stmt = $pdo->prepare('INSERT INTO usuarios (rol_id, nombre, correo, password_hash, activo)
+                               VALUES (:rol_id, :nombre, :correo, :hash, :activo)');
+        $stmt->execute([
+            ':rol_id' => $datos['rol_id'],
+            ':nombre' => $datos['nombre'],
+            ':correo' => $datos['correo'],
+            ':hash' => $hash,
+            ':activo' => $datos['activo'],   
+        ]);
+        $id = (int) $pdo->lastInsertId();
+
+        // En la bitacora solo van los datos del usuario, nunca lo contraseña
+        registrarBitacora($pdo, $actorId, 'crear', 'usuario', $id, null, [
+            'nombre' => $datos['nombre'],
+            'correo' => $datos['correo'],
+            'rol_id' => $datos['rol_id'],
+            'activo' => $datos['activo'],
+        ]);
+
+        $pdo->commit();
+        return $id;
+
+    } catch (Throwable $e) {
+        // Si algo falla, se deschace de todo y el error sigue en
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
+// Actualiza un usuario y devuelve false si no existe o ya estaba eliminado
+// Los datos ya deben venir validados con el metodo validarUsuario()
+function actualizarUsuario(PDO $pdo, int $id, array $datos, int $actorId): bool {
+    $pdo->beginTransaction();
+    try {
+        // Como estaba antes, para la bitacora
+        $antes = buscarUsuario($pdo, $id);
+        if ($antes === null) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        $sql = 'UPDATE usuarios SET nombre = :nombre, correo = :correo, rol_id = :rol_id, activo = :activo';
+        $params = [
+            ':nombre' => $datos['nombre'],
+            ':correo' => $datos['correo'],
+            ':rol_id' => $datos['rol_id'],
+            ':activo' => $datos['activo'],
+            ':id' => $id,
+        ];
+        
+        // Que pasa con la contrasena
+        $cambiaClave = false;
+        if (nombreRol($pdo, $datos['rol_id']) === 'profesor') {
+            // Un profesor no lleva contrasena
+            $sql .= ', password_hash = NULL';
+            $cambiaClave = true;
+        } elseif ($datos['password'] !== '') {
+            // Escribieron una contrasena nueva
+            $sql .= ', password_hash = :hash';
+            $params[':hash'] = password_hash($datos['password'], PASSWORD_DEFAULT);
+            $cambiaClave = true;
+        }
+
+        // Si la dejaron vacía, no se toca la contrase
+        $stmt = $pdo->prepare($sql . ' WHERE id = :id AND eliminado_en IS NULL');
+        $stmt->execute($params);
+
+        // Si cambió la contrasena, lasc ocokies de "Recordarme" viejas ya no sirven, asi que se borran
+        if ($cambiaClave) {
+            $stmt = $pdo->prepare('DELETE FROM auth_tokens WHERE usuario_id = :id');
+            $stmt->execute([':id' => $id]);
+        }
+
+        // Registramos la acción en la bitacora, con los datos antes y despues
+        registrarBitacora($pdo, $actorId, 'editar', 'usuario', $id, [
+            'nombre' => $antes['nombre'],
+            'correo' => $antes['correo'],
+            'rol_id' => (int) $antes['rol_id'],
+            'activo' => (int) $antes['activo'],
+        ], [
+            'nombre' => $datos['nombre'],
+            'correo' => $datos['correo'],
+            'rol_id' => $datos['rol_id'],
+            'activo' => $datos['activo'],
+        ]);
+
+        $pdo->commit();
+        return true;
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
+// Elimina un usuario de forma lógica, no se bora la fila, solo se marca con la fecha
+// Devuelve false si no existe o ya estaba eliminado
+function eliminarUsuario(PDO $pdo, int $id, int $actorId): bool {
+    $pdo->beginTransaction();
+    try {
+        $antes = buscarUsuario($pdo, $id);
+        if ($antes === null) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        $stmt = $pdo->prepare('UPDATE usuarios SET eliminado_en = NOW() WHERE id = :id AND eliminado_en IS NULL');
+        $stmt->execute([':id' => $id]);
+
+        // Sus cookies de recordarme se borran, ya no puede entrar por ahí
+        $stmt = $pdo->prepare('DELETE FROM auth_tokens WHERE usuario_id = :id');
+        $stmt->execute([':id' => $id]);
+
+        registrarBitacora($pdo, $actorId, 'eliminar', 'usuario', $id, [
+            'nombre' => $antes['nombre'],
+            'correo' => $antes['correo'],
+            'rol_id' => (int) $antes['rol_id'],
+            'activo' => (int) $antes['activo'],
+        ], null);
+
+        $pdo->commit();
+        return true;
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
 }
