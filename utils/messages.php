@@ -13,9 +13,19 @@ const MESSAGES = [
         'forbidden' => 'No tiene permisos para realizar esa acción.',
         'csrf_invalid' => 'La solicitud no es válida. Intente nuevamente.',
         'server_error' => 'Ocurrió un error. Inténtelo más tarde.',
+        'invalid_name' => 'El nombre debe tener entre 2 y 100 caracteres.',
+        'invalid_email' => 'Ingrese un correo válido de máximo 150 caracteres.',
+        'invalid_role' => 'Seleccione un rol válido.',
+        'invalid_password' => 'La contraseña debe tener entre 8 y 72 caracteres.',
+        'email_exists' => 'Ya existe un usuario con el mismo correo.',
+        'user_not_found' => 'El usuario no existe o ya fue eliminado del sistema.',
+        'cannot_modify_self' => 'No puede desactivar, eliminar ni tampoco cambiar el rol de su propia cuenta.',
     ],
     'success' => [
         'logged_out' => 'Sesión cerrada exitosamente.',
+        'user_created' => 'Usuario creado correctamente.',
+        'user_updated' => 'Usuario actualizado correctamente.',
+        'user_deleted' => 'Usuario eliminado correctamente.',
     ],
 ];
 

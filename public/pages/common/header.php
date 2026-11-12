@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../../../utils/messages.php';
 
 $pageTitle = $pageTitle ?? 'SIGEL';
+$rolActual = $_SESSION['user_role'] ?? null; // Rol del usuario que tiene la sesion abierta, o null si no ha iniciado sesion
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,8 +19,16 @@ $pageTitle = $pageTitle ?? 'SIGEL';
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
         <a class="navbar-brand" href="/index.php">SIGEL</a>
+        <?php if ($rolActual !== null): ?>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="/pages/dashboard.php">Inicio</a></li>
+                <?php if ($rolActual === 'administrador'): ?>
+                    <li class="nav-item"><a class="nav-link" href="/pages/usuarios.php">Usuarios</a></li>
+                <?php endif; ?>
+            </ul>
+        <?php endif; ?>
     </nav>
     <div class="container">
         <?php renderAlert(); ?>
