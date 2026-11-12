@@ -37,7 +37,7 @@ try {
     }
     //Creamos el usuario y registra la accion en la bitacora, todo en una transaccion
     crearUsuario($pdo, $datos, (int) $_SESSION['user_id']);
-} catch (Exception $e) {
+} catch (PDOException $e) {
     // 23000 es codigo de error, violacion de UNIQUE, otro administrador ya creó ese correo justo antes
     if ($e->getCode() === '23000') {
         header('Location: /pages/usuario_form.php?error=email_exists');
