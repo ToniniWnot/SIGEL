@@ -35,18 +35,7 @@ require_once __DIR__ . '/common/header.php';
     <a href="/pages/usuario_form.php" class="btn btn-primary">Nuevo usuario</a>
 </div>
 
-<?php renderBuscador('/pages/usuarios.php', $busqueda, $porPagina, 'Buscar por nombre o correo')?>
-    <input type="text" name="q" class="form-control mr-2" placeholder="Buscar por nombre o correo"
-           maxlength="100" value="<?= htmlspecialchars($busqueda, ENT_QUOTES, 'UTF-8') ?>">
-    <label for="per_page" class="mr-2">Por página</label>
-    <select name="per_page" id="per_page" class="form-control mr-2" onchange="this.form.submit()">
-        <?php foreach (PER_PAGE_OPTIONS as $opcion): ?>
-            <option value="<?= $opcion ?>" <?= $opcion === $porPagina ? 'selected' : '' ?>><?= $opcion ?></option>
-        <?php endforeach; ?>
-    </select>
-    <button type="submit" class="btn btn-outline-secondary">Buscar</button>
-</form>
-
+<?php renderBuscador('/pages/usuarios.php', $busqueda, $porPagina, 'Buscar por nombre o correo');?>
 <?php if (count($usuarios) === 0): ?>
     <p class="text-muted">No se encontraron usuarios.</p>
 <?php else: ?>
