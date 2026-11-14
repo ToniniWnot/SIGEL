@@ -44,7 +44,7 @@ try {
         exit;
     }
     error_log($e->getMessage());
-    header('Location: /pages/usuario_form.php?error=server_error');
+    header('Location: /pages/usuarios.php?error=server_error');
     exit;
 }
 
