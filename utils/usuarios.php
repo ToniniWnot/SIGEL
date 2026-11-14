@@ -2,13 +2,7 @@
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/bitacora.php';
-
-// Prepara el texto de busqueda para usurlo en un LIKE
-// Escapa % y _ para que se busquen como letras normales y no como comodines
-function patronBusqueda(string $busqueda): string {
-    $limpio = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $busqueda);
-    return '%' . $limpio . '%';
-} 
+require_once __DIR__ . '/helpers.php';
 
 // Cuenta cuántos usuarios hay sin contar los eliminados, y filtra por la búsqueda
 function contarUsuarios(PDO $pdo, string $busqueda): int {
@@ -60,13 +54,6 @@ function listarRoles(PDO $pdo): array {
 }
 
 // Limpiar lo que llega del formulario
-
-// Lee un campo del formulario como texto
-// Y si no llegó o llegó un como arreglo, devuelve vació para que no pase nada raro
-function textoPost(array $post, string $clave): string {
-    $valor = $post[$clave] ?? '';
-    return is_string($valor) ? $valor : '';
-}
 
 // Tomamos lo que llegó del formulario $_POST y lo deja limpio con el tipo correto
 function datosUsuarioDesdePost(array $post): array {
