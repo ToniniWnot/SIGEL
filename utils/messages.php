@@ -19,6 +19,11 @@ const MESSAGES = [
         'invalid_password' => 'La contraseña debe tener entre 8 y 72 caracteres.',
         'email_exists' => 'Ya existe un usuario con el mismo correo.',
         'user_not_found' => 'El usuario no existe o ya fue eliminado del sistema.',
+        'invalid_category_name' => 'El nombre de la categoría debe tener entre 2 y 80 caracteres.',
+        'invalid_days' => 'Los días máximos de préstamo deben ser un número entre 1 y 365.',
+        'category_exists' => 'Ya existe una categoría con el mismo nombre.',
+        'cateoria_not_found' => 'La categoría no existe o ya fue eliminada del sistema.',
+        'category_in_use' => 'No se puede eliminar la categoría porque tiene equipos asociados.',
         'cannot_modify_self' => 'No puede desactivar, eliminar ni tampoco cambiar el rol de su propia cuenta.',
     ],
     'success' => [
@@ -26,6 +31,9 @@ const MESSAGES = [
         'user_created' => 'Usuario creado correctamente.',
         'user_updated' => 'Usuario actualizado correctamente.',
         'user_deleted' => 'Usuario eliminado correctamente.',
+        'category_created' => 'Categoría creada correctamente.',
+        'category_updated' => 'Categoría actualizada correctamente.',
+        'category_deleted' => 'Categoría eliminada correctamente.',
     ],
 ];
 

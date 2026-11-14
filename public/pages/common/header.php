@@ -26,6 +26,7 @@ $rolActual = $_SESSION['user_role'] ?? null; // Rol del usuario que tiene la ses
                 <li class="nav-item"><a class="nav-link" href="/pages/dashboard.php">Inicio</a></li>
                 <?php if ($rolActual === 'administrador'): ?>
                     <li class="nav-item"><a class="nav-link" href="/pages/usuarios.php">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/pages/categorias.php">Categorías</a></li>
                 <?php endif; ?>
             </ul>
         <?php endif; ?>
