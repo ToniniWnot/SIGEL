@@ -28,12 +28,11 @@ try {
 } catch (PDOException $e) {
     // 23000 codigo violacion UNIQUE, otro admin creó ese nombre ahora
     if ($e->getCode() === '23000') {
-        $_SESSION['categoria_form'] = ['id' => null] + $datos;
         header('Location: /pages/categoria_form.php?error=category_exists');
         exit;
     }
     error_log($e->getMessage());
-    header('Location: /pages/categoria_form.php?error=server_error');
+    header('Location: /pages/categorias.php?error=server_error');
     exit;
 }
 
