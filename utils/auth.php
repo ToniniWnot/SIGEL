@@ -22,7 +22,7 @@ function startSession() {
 const SESSION_TIMEOUT = 1800; // 30 minutos
 // Nombre de la cookie de "Recordarme" y duanto dura
 const REMEMBER_ME_COOKIE = 'sigel_remember';
-const REMEMBER_DAYS = 14; // 14 cd /Applications/XAMPP/xamppfiles/htdocs/sigeldías 
+const REMEMBER_DAYS = 14; // 14 días
 
 // Cierra la sesión por completo
 // Vacía los datos, borra la cookie y destruye en el servidor

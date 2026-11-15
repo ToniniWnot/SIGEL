@@ -1,4 +1,6 @@
 <?php
+// Todas las fechas de aplicacion usan la hora de CR
+date_default_timezone_set('America/Costa_Rica');
 // Hacemos la conexión a la base de datos usando PDO
 // Uso $pdo = obtener_conexion() para obtener la conexión
 function obtener_conexion(): PDO {
@@ -18,7 +20,7 @@ function obtener_conexion(): PDO {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //Devuelve filas como arreglos asociativos
             PDO::ATTR_EMULATE_PREPARES => false, // Sentencias preparadas reales
         ]);
-
+        $pdo->exec("SET time_zone = '-06:00'"); // Hora de Costa Rica
     }
 
     return $pdo;
