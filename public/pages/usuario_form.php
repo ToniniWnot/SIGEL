@@ -64,13 +64,13 @@ require_once __DIR__ . '/common/header.php';
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required
-                               value="<?= htmlspecialchars($valores['nombre'], ENT_QUOTES, 'UTF-8') ?>">
+                               value="<?= htmlspecialchars($valores['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="correo">Correo</label>
                         <input type="email" class="form-control" id="correo" name="correo" maxlength="150" required
-                               value="<?= htmlspecialchars($valores['correo'], ENT_QUOTES, 'UTF-8') ?>">
+                               value="<?= htmlspecialchars($valores['correo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>">
                     </div>
 
                     <div class="form-group">
@@ -79,7 +79,7 @@ require_once __DIR__ . '/common/header.php';
                             <option value="">Seleccione un rol</option>
                             <?php foreach ($roles as $rol): ?>
                                 <option value="<?= (int) $rol['id'] ?>" <?= (int) $rol['id'] === (int) $valores['rol_id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($rol['nombre'], ENT_QUOTES, 'UTF-8') ?>
+                                    <?= htmlspecialchars($rol['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

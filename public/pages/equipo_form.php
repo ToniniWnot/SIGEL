@@ -63,14 +63,14 @@ require_once __DIR__ . '/common/header.php';
                     <div class="form-group">
                         <label for="codigo">Código</label>
                         <input type="text" class="form-control" id="codigo" name="codigo" maxlength="30" required
-                               value="<?= htmlspecialchars($valores['codigo'], ENT_QUOTES, 'UTF-8') ?>">
+                               value="<?= htmlspecialchars($valores['codigo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>">
                         <small class="form-text text-muted">Letras, números, punto, guion o guion bajo. Se guarda en mayúsculas.</small>
                     </div>
 
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required
-                               value="<?= htmlspecialchars($valores['nombre'], ENT_QUOTES, 'UTF-8') ?>">
+                               value="<?= htmlspecialchars($valores['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>">
                     </div>
 
                     <div class="form-group">
@@ -79,7 +79,7 @@ require_once __DIR__ . '/common/header.php';
                             <option value="">Seleccione una categoría</option>
                             <?php foreach ($categorias as $c): ?>
                                 <option value="<?= (int) $c['id'] ?>" <?= (int) $valores['categoria_id'] === (int) $c['id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($c['nombre'], ENT_QUOTES, 'UTF-8') ?>
+                                    <?= htmlspecialchars($c['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -89,8 +89,8 @@ require_once __DIR__ . '/common/header.php';
                         <label for="estado">Estado</label>
                         <select class="form-control" id="estado" name="estado" required>
                             <?php foreach (ESTADOS_EQUIPO as $clave => $etiqueta): ?>
-                                <option value="<?= htmlspecialchars($clave, ENT_QUOTES, 'UTF-8') ?>" <?= $valores['estado'] === $clave ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($etiqueta, ENT_QUOTES, 'UTF-8') ?>
+                                <option value="<?= htmlspecialchars($clave, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>" <?= $valores['estado'] === $clave ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($etiqueta, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

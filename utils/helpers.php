@@ -35,9 +35,9 @@ function calcularPagina(int $total, int $porPagina): array
 // Va por GET para que el enlace se pueda compartir
 function renderBuscador(string $ruta, string $busqueda, int $porPagina, string $placeholder): void
 {
-    $ruta = htmlspecialchars($ruta, ENT_QUOTES, 'UTF-8');
-    $busqueda = htmlspecialchars($busqueda, ENT_QUOTES, 'UTF-8');
-    $placeholder = htmlspecialchars($placeholder, ENT_QUOTES, 'UTF-8');
+    $ruta = htmlspecialchars($ruta, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $busqueda = htmlspecialchars($busqueda, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $placeholder = htmlspecialchars($placeholder, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
     $opciones = '';
     foreach (PER_PAGE_OPTIONS as $opcion) {
@@ -56,7 +56,7 @@ function renderBuscador(string $ruta, string $busqueda, int $porPagina, string $
 // Imprime los botones Anterior y Siguiente conservando la busqueda
 function renderPaginacion(string $ruta, string $busqueda, int $pagina, int $totalPaginas, int $total): void
 {
-    $url = fn(int $p) => htmlspecialchars($ruta . '?' . http_build_query(['q' => $busqueda, 'pagina' => $p]), ENT_QUOTES, 'UTF-8');
+    $url = fn(int $p) => htmlspecialchars($ruta . '?' . http_build_query(['q' => $busqueda, 'pagina' => $p]), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
     echo '<nav aria-label="Paginación"><ul class="pagination">'
         . '<li class="page-item ' . ($pagina <= 1 ? 'disabled' : '') . '"><a class="page-link" href="' . $url(max(1, $pagina - 1)) . '">Anterior</a></li>'

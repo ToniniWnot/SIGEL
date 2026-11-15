@@ -54,7 +54,7 @@ function renderAlert() {
         $code = $_GET[$type] ?? null;
         if (is_string($code) && isset(MESSAGES[$type][$code])) {
             echo '<div class="alert alert-' . $style . '" role="alert">'
-                . htmlspecialchars(MESSAGES[$type][$code], ENT_QUOTES, 'UTF-8')
+                . htmlspecialchars(MESSAGES[$type][$code], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
                 . '</div>';
         }
     }

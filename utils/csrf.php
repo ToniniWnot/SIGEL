@@ -17,7 +17,7 @@ function getCsrfToken() {
 // Imprime un campo oculto que va dentro de cada formulario POST
 function csrfField() {
     $token = getCsrfToken();
-    echo '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
+    echo '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">';
 }
 
 // Valida el token enviado, si no coincide, termina con el error csrf_invalid

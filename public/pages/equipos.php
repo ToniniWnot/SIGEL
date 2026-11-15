@@ -65,12 +65,12 @@ require_once __DIR__ . '/common/header.php';
             <tbody>
                 <?php foreach ($equipos as $e): ?>
                     <tr>
-                        <td><?= htmlspecialchars($e['codigo'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($e['nombre'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($e['categoria'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($e['codigo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($e['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($e['categoria'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
                         <td>
                             <span class="badge badge-<?= COLOR_ESTADO[$e['estado']] ?? 'secondary' ?>">
-                                <?= htmlspecialchars(ESTADOS_EQUIPO[$e['estado']] ?? $e['estado'], ENT_QUOTES, 'UTF-8') ?>
+                                <?= htmlspecialchars(ESTADOS_EQUIPO[$e['estado']] ?? $e['estado'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
                             </span>
                         </td>
                         <?php if ($esAdmin): ?>

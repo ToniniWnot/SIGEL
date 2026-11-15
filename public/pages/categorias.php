@@ -50,7 +50,7 @@ require_once __DIR__ . '/common/header.php';
             <tbody>
                 <?php foreach ($categorias as $c): ?>
                     <tr>
-                        <td><?= htmlspecialchars($c['nombre'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($c['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
                         <td><?= (int) $c['dias_max_prestamo'] ?></td>
                         <td class="text-right">
                             <a href="/pages/categoria_form.php?id=<?= (int) $c['id'] ?>" class="btn btn-sm btn-outline-primary">Editar</a>
