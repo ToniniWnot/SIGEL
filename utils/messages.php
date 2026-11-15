@@ -31,6 +31,16 @@ const MESSAGES = [
         'equipment_exists' => 'Ya existe un equipo con el mismo código.',
         'equipment_not_found' => 'El equipo no existe o ya fue eliminado del sistema.',
         'equipment_in_use' => 'No se puede eliminar el equipo porque está en un préstamo activo.',
+        'invalid_professor' => 'Seleccione un profesor válido.',
+        'invalid_dates' => 'Las fechas no son válidas, la fecha de fin debe ser posterior a la de inicio.',
+        'date_in_past' => 'El préstamo no puede iniciar en una fecha que ya pasó.',
+        'invalid_equipment_selection' => 'Seleccione entre 1 y 10 equipos.',
+        'equipment_unavailable' => 'Alguno de los equipos no existe o no está disponible para préstamo.',
+        'loan_too_long' => 'La duración del préstamo supera el máximo de días que permite la categoría de alguno de los equipos.',
+        'loan_overlap' => 'Alguno de los equipos ya está prestado o solicitado en ese horario.',
+        'loan_not_found' => 'El préstamo no existe.',
+        'invalid_transition' => 'Ese cambio de estado no está permitido para el préstamo.',
+        'invalid_condition' => 'Indique la condición, buena o dañada, de cada equipo devuelto.',
         'cannot_modify_self' => 'No puede desactivar, eliminar ni tampoco cambiar el rol de su propia cuenta.',
     ],
     'success' => [
@@ -44,6 +54,11 @@ const MESSAGES = [
         'equipment_created' => 'Equipo creado correctamente.',
         'equipment_updated' => 'Equipo actualizado correctamente.',
         'equipment_deleted' => 'Equipo eliminado correctamente.',
+        'loan_created' => 'Préstamo registrado correctamente.',
+        'loan_approved' => 'Préstamo aprobado.',
+        'loan_delivered' => 'Equipos entregados.',
+        'loan_cancelled' => 'Préstamo cancelado.',
+        'loan_returned' => 'Devolución registrada correctamente.',
     ],
 ];
 
