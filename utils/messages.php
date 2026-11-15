@@ -24,6 +24,13 @@ const MESSAGES = [
         'category_exists' => 'Ya existe una categoría con el mismo nombre.',
         'category_not_found' => 'La categoría no existe o ya fue eliminada del sistema.',
         'category_in_use' => 'No se puede eliminar la categoría porque tiene equipos asociados.',
+        'invalid_equipment_code' => 'El código del equipo debe tener de 2 a 30 caracteres: letras, números, punto, guion o guion bajo.',
+        'invalid_equipment_name' => 'El nombre del equipo debe tener entre 2 y 100 caracteres.',
+        'invalid_state' => 'Seleccione un estado válido para el equipo.',
+        'invalid_category' => 'Seleccione una categoría válida.',
+        'equipment_exists' => 'Ya existe un equipo con el mismo código.',
+        'equipment_not_found' => 'El equipo no existe o ya fue eliminado del sistema.',
+        'equipment_in_use' => 'No se puede eliminar el equipo porque está en un préstamo activo.',
         'cannot_modify_self' => 'No puede desactivar, eliminar ni tampoco cambiar el rol de su propia cuenta.',
     ],
     'success' => [
@@ -34,6 +41,9 @@ const MESSAGES = [
         'category_created' => 'Categoría creada correctamente.',
         'category_updated' => 'Categoría actualizada correctamente.',
         'category_deleted' => 'Categoría eliminada correctamente.',
+        'equipment_created' => 'Equipo creado correctamente.',
+        'equipment_updated' => 'Equipo actualizado correctamente.',
+        'equipment_deleted' => 'Equipo eliminado correctamente.',
     ],
 ];
 
