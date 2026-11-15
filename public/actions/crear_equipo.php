@@ -27,9 +27,8 @@ try {
         exit;
     }
 } catch (PDOException $e) {
-    // 23000 es una violacion de UNIQUE
+    // 23000 es una violación de UNIQUE
     if ($e->getCode() === '23000') {
-        $_SESSION['equipo_form'] = ['id' => null] + $datos;
         header('Location: /pages/equipo_form.php?error=equipment_exists');
         exit;
     }
