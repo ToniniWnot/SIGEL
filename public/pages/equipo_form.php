@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
 
 try {
     $pdo = obtener_conexion();
-    $equipo = $id === ? null : buscarEquipo($pdo, $id);
+    $equipo = $id === null ? null : buscarEquipo($pdo, $id);
     // Esto para llenar el select de categorias
     $categorias = listarCategoriasActivas($pdo);
 } catch (PDOException $e) {
