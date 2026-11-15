@@ -22,7 +22,7 @@ function startSession() {
 const SESSION_TIMEOUT = 1800; // 30 minutos
 // Nombre de la cookie de "Recordarme" y duanto dura
 const REMEMBER_ME_COOKIE = 'sigel_remember';
-const REMEMBER_DAYS = 30; // 30 días 
+const REMEMBER_DAYS = 14; // 14 cd /Applications/XAMPP/xamppfiles/htdocs/sigeldías 
 
 // Cierra la sesión por completo
 // Vacía los datos, borra la cookie y destruye en el servidor
@@ -107,7 +107,7 @@ function createRememberMeToken(PDO $pdo, int $userId) {
 
     // Envia la cookie con selector y validador al navegador
     setcookie(REMEMBER_ME_COOKIE, $selector . ':' . $validator, [
-        'expires' => time() + (REMEMBER_DAYS * 86400), // 30 días
+        'expires' => time() + (REMEMBER_DAYS * 86400), // 14 días
         'path' => '/',
         'httponly' => true, // Javascript no puede leer la cookie y así frenamos el robo por XSS
         'samesite' => 'Lax'
