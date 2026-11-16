@@ -65,7 +65,7 @@ require_once __DIR__ . '/common/header.php';
             <tbody>
                 <?php foreach ($equipos as $e): ?>
                     <tr>
-                        <td><?= htmlspecialchars($e['codigo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
+                        <td><a href="/pages/equipo.php?id=<?= (int) $e['id'] ?>"><?= htmlspecialchars($e['codigo'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a></td>
                         <td><?= htmlspecialchars($e['nombre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($e['categoria'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
                         <td>
