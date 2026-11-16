@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS prestamo_detalle (
     prestamo_id INT NOT NULL,
     equipo_id INT NOT NULL,
     fecha_devolucion DATETIME NULL,
-    condicion_devolucion VARCHAR(10) NULL, -- Bueno o malo se llena al devolver el equipo :D
+    condicion_devolucion VARCHAR(10) NULL, -- Bueno o danado se llena al devolver el equipo :D
     PRIMARY KEY (prestamo_id, equipo_id),
     FOREIGN KEY (prestamo_id) REFERENCES prestamos (id),
     FOREIGN KEY (equipo_id) REFERENCES equipos (id)
