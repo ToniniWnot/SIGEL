@@ -8,3 +8,7 @@ config/config.php
 .vscode/
 .idea/
 *.log
+
+# Imágenes subidas por los usuarios
+storage/equipos/*
+!storage/equipos/.gitkeep
