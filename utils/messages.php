@@ -41,6 +41,12 @@ const MESSAGES = [
         'loan_not_found' => 'El préstamo no existe.',
         'invalid_transition' => 'Ese cambio de estado no está permitido para el préstamo.',
         'invalid_condition' => 'Indique la condición, buena o dañada, de cada equipo devuelto.',
+        'no_image_selected' => 'Seleccione al menos una imagen.',
+        'invalid_image' => 'Solo se permiten imágenes JPG, PNG o WEBP válidas.',
+        'image_too_large' => 'Cada imagen debe pesar máximo 2 MB.',
+        'image_limit' => 'Un equipo puede tener como máximo 5 imágenes.',
+        'image_not_found' => 'La imagen no existe o ya fue eliminada.',
+        'upload_failed' => 'No se pudo guardar la imagen. Inténtelo más tarde.',
         'cannot_modify_self' => 'No puede desactivar, eliminar ni tampoco cambiar el rol de su propia cuenta.',
     ],
     'success' => [
@@ -59,6 +65,8 @@ const MESSAGES = [
         'loan_delivered' => 'Equipos entregados.',
         'loan_cancelled' => 'Préstamo cancelado.',
         'loan_returned' => 'Devolución registrada correctamente.',
+        'image_uploaded' => 'Imágenes subidas correctamente.',
+        'image_deleted' => 'Imagen eliminada correctamente.',
     ],
 ];
 
