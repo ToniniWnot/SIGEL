@@ -1,8 +1,8 @@
 <?php
 // Aprueba, entrega o cancela un prestamo, la devolucion tiene su propia accion
-require_once __DIR__ . '/../utils/auth.php';
-require_once __DIR__ . '/../utils/prestamos.php';
-require_once __DIR__ . '/../utils/csrf.php';
+require_once __DIR__ . '/../../utils/auth.php';
+require_once __DIR__ . '/../../utils/prestamos.php';
+require_once __DIR__ . '/../../utils/csrf.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /pages/prestamos.php');

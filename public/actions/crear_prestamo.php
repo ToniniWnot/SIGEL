@@ -1,8 +1,8 @@
 <?php
 // Procesa el formulario de nuevo prestamo
-require_once __DIR__ . '/../utils/auth.php';
-require_once __DIR__ . '/../utils/prestamos.php';
-require_once __DIR__ . '/../utils/csrf.php';
+require_once __DIR__ . '/../../utils/auth.php';
+require_once __DIR__ . '/../../utils/prestamos.php';
+require_once __DIR__ . '/../../utils/csrf.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /pages/prestamos.php');
@@ -19,7 +19,7 @@ try {
     // Primero una validacion rapida, luego crearPrestamo vuelve a revisar dentro de la transaccion
     $error = validarPrestamo($pdo, $datos);
     if ($error === null) {
-        $error = crearPrestamo($pdo, $datos, (int) $_SESSION['usuario_id']);
+        $error = crearPrestamo($pdo, $datos, (int) $_SESSION['user_id']);
     }
     if ($error !== null) {
         // Se guarda lo escrito y se vuelve al formulario con el error
