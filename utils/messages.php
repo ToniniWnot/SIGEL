@@ -47,6 +47,7 @@ const MESSAGES = [
         'image_limit' => 'Un equipo puede tener como máximo 5 imágenes.',
         'image_not_found' => 'La imagen no existe o ya fue eliminada.',
         'upload_failed' => 'No se pudo guardar la imagen. Inténtelo más tarde.',
+        'invalid_date_range' => 'El rango de fechas no es válido, revise que sea de máximo 366 días y que la fecha inicial no sea posterior a la final.',
         'cannot_modify_self' => 'No puede desactivar, eliminar ni tampoco cambiar el rol de su propia cuenta.',
     ],
     'success' => [
