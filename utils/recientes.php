@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/https.php';
 
 // Cookie con los ultimos equipos consultados
 // Se guarda los ids separados por coma, por ejemplo "9, 2, 10"
@@ -42,6 +43,7 @@ function registrarReciente(int $equipoId): void {
     setcookie(RECIENTES_COOKIE, $valor, [
         'expires' => time() + (RECIENTES_DIAS * 86400),
         'path' => '/',
+        'secure' => esHttps(),
         'httponly' => true,
         'samesite' => 'Lax'
     ]);

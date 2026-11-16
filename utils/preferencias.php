@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/https.php';
+
 // Cantidades de registros por página que se permiten y el valor por defecto
 const PER_PAGE_OPTIONS = [5, 10, 20, 50];
 const PER_PAGE_DEFAULT = 10;
@@ -36,6 +38,7 @@ function obtenerPorPagina(string $modulo): int {
             setcookie($cookie, (string) $elegido, [
                 'expires' => time() + (PER_PAGE_DAYS * 86400), // 1 año
                 'path' => '/',
+                'secure' => esHttps(), 
                 'httponly' => true,
                 'samesite' => 'Lax'
             ]);

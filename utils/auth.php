@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/https.php';
 
 // Inicia la sesión una sola vez por petición 
 // con la cookie de sesión protegida
@@ -11,6 +12,7 @@ function startSession() {
         ini_set('session.use_strict_mode', '1');
         session_set_cookie_params([
             'path' => '/',
+            'secure' => esHttps(), // Solo viaja por HTTPS cuando el sitio se sirve con HTTPS
             'httponly' => true, // Javascript no puede leer la cookie y así frenamos el robo por XSS
             'samesite' => 'Lax' // el navegador no la envía en peticiones POST desde otros sitioss
         ]);
@@ -109,6 +111,7 @@ function createRememberMeToken(PDO $pdo, int $userId) {
     setcookie(REMEMBER_ME_COOKIE, $selector . ':' . $validator, [
         'expires' => time() + (REMEMBER_DAYS * 86400), // 14 días
         'path' => '/',
+        'secure' => esHttps(), // Solo viaja por HTTPS cuando el sitio se sirve con HTTPS
         'httponly' => true, // Javascript no puede leer la cookie y así frenamos el robo por XSS
         'samesite' => 'Lax'
     ]);
@@ -174,6 +177,7 @@ function clearRememberToken(PDO $pdo) {
     setcookie(REMEMBER_ME_COOKIE, '', [
         'expires' => time() - 3600,
         'path' => '/',
+        'secure' => esHttps(), 
         'httponly' => true,
         'samesite' => 'Lax'
     ]);

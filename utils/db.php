@@ -1,4 +1,6 @@
 <?php
+// Los errores nunca se muestran en pantalla, van al archivo logs/app.log
+require_once __DIR__ . '/errores.php';
 // Todas las fechas de aplicacion usan la hora de CR
 date_default_timezone_set('America/Costa_Rica');
 // Hacemos la conexión a la base de datos usando PDO
