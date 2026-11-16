@@ -36,3 +36,81 @@ INSERT IGNORE INTO equipos (categoria_id, codigo, nombre, estado) VALUES
     ((SELECT id FROM categorias WHERE nombre = 'Cómputo'), 'LAP-002', 'Laptop Lenovo ThinkPad', 'disponible'),
     ((SELECT id FROM categorias WHERE nombre = 'Audiovisual'), 'PRO-001', 'Proyector Epson', 'disponible'),
     ((SELECT id FROM categorias WHERE nombre = 'Audiovisual'), 'CAM-001', 'Cámara Canon', 'mantenimiento');
+
+-- Préstamos de ejemplo en todos los estados, para que el listado y el reporte tengan datos
+-- Inserción omite préstamos existentes
+-- usuario_id es el profesor que recibe el equipo y operador_id quien lo registró
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'ana.mora@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'devuelto', '2026-11-02 08:00:00', '2026-11-04 08:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-02 08:00:00');
+
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'luis.rojas@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'devuelto', '2026-11-05 09:00:00', '2026-11-07 09:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-05 09:00:00');
+
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'ana.mora@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'devuelto', '2026-11-09 10:00:00', '2026-11-11 10:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-09 10:00:00');
+
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'ana.mora@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'cancelado', '2026-11-12 09:00:00', '2026-11-13 09:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-12 09:00:00');
+
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'luis.rojas@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'entregado', '2026-11-14 08:00:00', '2026-11-18 17:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-14 08:00:00');
+
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'ana.mora@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'aprobado', '2026-11-20 09:00:00', '2026-11-22 09:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-20 09:00:00');
+
+INSERT INTO prestamos (usuario_id, operador_id, estado, fecha_inicio, fecha_fin)
+SELECT (SELECT id FROM usuarios WHERE correo = 'luis.rojas@sigel.local'),
+       (SELECT id FROM usuarios WHERE correo = 'operador@sigel.local'),
+       'solicitado', '2026-11-25 09:00:00', '2026-11-27 09:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM prestamos WHERE fecha_inicio = '2026-11-25 09:00:00');
+
+-- Equipos de cada préstamo, las fk evitan repetirlos al ejecutar de nuevo
+-- Los devueltos traen fecha y condición de devolución
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id, fecha_devolucion, condicion_devolucion)
+SELECT p.id, e.id, '2026-11-04 07:45:00', 'bueno'
+FROM prestamos p JOIN equipos e ON e.codigo IN ('OSC-001', 'LAP-001')
+WHERE p.fecha_inicio = '2026-11-02 08:00:00';
+
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id, fecha_devolucion, condicion_devolucion)
+SELECT p.id, e.id, '2026-11-07 08:50:00', 'bueno'
+FROM prestamos p JOIN equipos e ON e.codigo IN ('OSC-001', 'MUL-001')
+WHERE p.fecha_inicio = '2026-11-05 09:00:00';
+
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id, fecha_devolucion, condicion_devolucion)
+SELECT p.id, e.id, '2026-11-11 09:30:00', 'bueno'
+FROM prestamos p JOIN equipos e ON e.codigo = 'PRO-001'
+WHERE p.fecha_inicio = '2026-11-09 10:00:00';
+
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id)
+SELECT p.id, e.id FROM prestamos p JOIN equipos e ON e.codigo = 'LAP-002'
+WHERE p.fecha_inicio = '2026-11-12 09:00:00';
+
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id)
+SELECT p.id, e.id FROM prestamos p JOIN equipos e ON e.codigo = 'LAP-001'
+WHERE p.fecha_inicio = '2026-11-14 08:00:00';
+
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id)
+SELECT p.id, e.id FROM prestamos p JOIN equipos e ON e.codigo = 'PRO-001'
+WHERE p.fecha_inicio = '2026-11-20 09:00:00';
+
+INSERT IGNORE INTO prestamo_detalle (prestamo_id, equipo_id)
+SELECT p.id, e.id FROM prestamos p JOIN equipos e ON e.codigo IN ('OSC-001', 'MUL-001')
+WHERE p.fecha_inicio = '2026-11-25 09:00:00';
