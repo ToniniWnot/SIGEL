@@ -2,11 +2,11 @@
 
 Sistema de Gestión de Préstamo de Equipos de Laboratorio. Proyecto 1 de ISW-613.
 
-Permite al administrador gestionar usuarios, categorías y equipos (con imágenes) y consultar el reporte de equipos más prestados, y al operador registrar y avanzar los préstamos de equipos a los profesores.
+Permite al administrador gestionar usuarios, categorías y equipos (con imágenes) y consultar el reporte de equipos más prestados y la bitácora de movimientos, y al operador registrar y avanzar los préstamos de equipos a los profesores.
 
 ## Funciones
 
-- **Administrador:** CRUD de usuarios, categorías y equipos con búsqueda y paginación, eliminación lógica, imágenes de los equipos y reporte de equipos más prestados por rango de fechas con exportación a CSV.
+- **Administrador:** CRUD de usuarios, categorías y equipos con búsqueda y paginación, eliminación lógica, imágenes de los equipos y reporte de equipos más prestados por rango de fechas con exportación a CSV, y consulta de la bitácora de movimientos con filtros por entidad, acción, usuario y fechas.
 - **Operador:** consulta de equipos (con sus imágenes y los consultados recientemente), registro de préstamos de uno o varios equipos, y cambio de estado: solicitado, aprobado, entregado, devuelto o cancelado.
 - **Reglas de negocio:** un equipo no se puede prestar en un intervalo que se traslape con otro préstamo activo, la duración no puede superar el máximo de la categoría, y al devolver se marca cada equipo como bueno o dañado (un equipo dañado solo lo reactiva el administrador).
 - **Cookies:** "Recordarme" (selector:validador), cantidad de registros por página y equipos consultados recientemente.
@@ -83,7 +83,7 @@ Los profesores (`ana.mora@sigel.local` y `luis.rojas@sigel.local`) son quienes r
 
 ## Recorrido sugerido
 
-1. Entrar como **administrador**: revisar usuarios, categorías y equipos, abrir un equipo (clic en su código) y subir una imagen, y abrir **Reportes** para ver y exportar los equipos más prestados.
+1. Entrar como **administrador**: revisar usuarios, categorías y equipos, abrir un equipo (clic en su código) y subir una imagen, y abrir **Reportes** para ver y exportar los equipos más prestados. Luego abrir **Bitácora** para ver los movimientos y filtrarlos.
 2. Entrar como **operador**: abrir **Préstamos**, crear uno nuevo, aprobarlo, entregarlo y devolverlo marcando cada equipo como bueno o dañado.
 3. Probar un traslape: pedir el mismo equipo en fechas que se cruzan con un préstamo activo, el sistema lo rechaza.
 
